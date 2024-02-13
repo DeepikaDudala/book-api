@@ -1,7 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schema/book.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Query } from 'express-serve-static-core';
 
 @Injectable()
@@ -27,6 +31,7 @@ export class BookService {
   }
 
   async findById(id: string): Promise<Book> {
+    this.isValidId(id);
     const book = await this.BookModel.findById(id);
     if (!book) throw new NotFoundException(`Book not Found`);
     return book;
@@ -38,10 +43,17 @@ export class BookService {
   }
 
   async updateById(id: string, book: Book): Promise<Book> {
+    this.isValidId(id);
     return await this.BookModel.findByIdAndUpdate(id, book, { new: true });
   }
 
   async deleteById(id: string): Promise<Book> {
+    this.isValidId(id);
     return await this.BookModel.findByIdAndDelete(id);
+  }
+
+  isValidId(id: string) {
+    if (!mongoose.isValidObjectId(id))
+      throw new BadRequestException(`Invalid Id`);
   }
 }
