@@ -7,6 +7,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schema/book.schema';
 import mongoose, { Model } from 'mongoose';
 import { Query } from 'express-serve-static-core';
+import { User } from 'src/auth/schema/user.schema';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
@@ -37,12 +40,12 @@ export class BookService {
     return book;
   }
 
-  async create(book: Book): Promise<Book> {
-    const res = await this.BookModel.create(book);
+  async create(book: CreateBookDto, user: User): Promise<Book> {
+    const res = await this.BookModel.create({ ...book, user: user._id });
     return res;
   }
 
-  async updateById(id: string, book: Book): Promise<Book> {
+  async updateById(id: string, book: UpdateBookDto): Promise<Book> {
     this.isValidId(id);
     return await this.BookModel.findByIdAndUpdate(id, book, { new: true });
   }
