@@ -1,5 +1,13 @@
-import { IsEAN, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEAN,
+  IsEmpty,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Category } from '../schema/book.schema';
+import { User } from 'src/auth/schema/user.schema';
 
 export class UpdateBookDto {
   @IsOptional()
@@ -21,4 +29,7 @@ export class UpdateBookDto {
   @IsOptional()
   @IsEnum(Category)
   category: Category;
+
+  @IsEmpty({ message: 'user doesnot require infprmation' })
+  user: User;
 }

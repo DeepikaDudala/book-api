@@ -1,4 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Document } from 'mongoose';
+import { User } from 'src/auth/schema/user.schema';
 
 export enum Category {
   ADVENTURE = 'ADVENTURE',
@@ -10,7 +12,7 @@ export enum Category {
 @Schema({
   timestamps: true,
 })
-export class Book {
+export class Book extends Document {
   @Prop({ required: true, unique: true })
   title: string;
 
@@ -25,6 +27,9 @@ export class Book {
 
   @Prop({ required: true })
   category: Category;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  user: User;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
