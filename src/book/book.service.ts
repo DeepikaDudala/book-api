@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schema/book.schema';
 import mongoose, { Model } from 'mongoose';
 import { Query } from 'express-serve-static-core';
-import { User } from 'src/auth/schema/user.schema';
+import { User } from '../auth/schema/user.schema';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
@@ -34,9 +34,16 @@ export class BookService {
   }
 
   async findById(id: string): Promise<Book> {
-    this.isValidId(id);
+    if (!mongoose.isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid Id`);
+    }
+
     const book = await this.BookModel.findById(id);
-    if (!book) throw new NotFoundException(`Book not Found`);
+
+    if (!book) {
+      throw new NotFoundException(`Book not Found`);
+    }
+
     return book;
   }
 

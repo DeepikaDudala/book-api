@@ -29,6 +29,6 @@ export class CreateBookDto {
   @IsEnum(Category)
   category: Category;
 
-  @IsEmpty({ message: 'user doesnot require infprmation' })
+  @IsEmpty({ message: 'user doesnot require information' })
   user: User;
 }
