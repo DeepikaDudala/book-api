@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { User } from 'src/auth/schema/user.schema';
-
+import { User } from '../../auth/schema/user.schema';
 export enum Category {
   ADVENTURE = 'ADVENTURE',
   CLASSICS = 'CLASSICS',
