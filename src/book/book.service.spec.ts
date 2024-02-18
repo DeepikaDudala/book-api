@@ -106,9 +106,7 @@ describe('BookService', () => {
 
   describe(`create`, () => {
     it(`should create a book`, async () => {
-      const mockBook: (Document<unknown, {}, Book> &
-        Book & { _id: ObjectId })[] = [];
-      jest.spyOn(model, 'create').mockResolvedValue(mockBook);
+      jest.spyOn(model, 'create').mockResolvedValue(mockBook as any);
       const newBook = {
         title: 'Book 11',
         description: 'This is a good book',
@@ -161,7 +159,7 @@ describe('BookService', () => {
 
       const result = await bookService.deleteById(mockBook._id);
 
-      expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook);
+      expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook._id);
       expect(result).toEqual(mockBook);
     });
   });
