@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -19,21 +15,19 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
+    const findUser = await this.UserModel.findOne({ email: signUpDto.email });
+    if (findUser) throw new UnauthorizedException(`User already Exists`);
+
     const { password, ...details } = signUpDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-    try {
-      const user = await this.UserModel.create({
-        ...details,
-        password: hashedPassword,
-      });
-      const token = this.jwtService.sign({ id: user._id });
 
-      return { token };
-    } catch (error) {
-      if (error?.code === 11000) {
-        throw new ConflictException(`User alredy Exists`);
-      }
-    }
+    const user = await this.UserModel.create({
+      ...details,
+      password: hashedPassword,
+    });
+    const token = this.jwtService.sign({ id: user._id });
+
+    return { token };
   }
 
   async login(loginDto: LoginDto): Promise<{ token: string }> {
@@ -43,9 +37,8 @@ export class AuthService {
     if (!user) throw new UnauthorizedException(`User not Exists`);
 
     const isPasswordMatched = bcrypt.compare(password, user.password);
-    if (!isPasswordMatched) {
+    if (!isPasswordMatched)
       throw new UnauthorizedException(`Password doesn't match`);
-    }
 
     const token = this.jwtService.sign({ id: user._id });
 
