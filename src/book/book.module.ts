@@ -3,8 +3,8 @@ import { BookController } from './book.controller';
 import { BookService } from './book.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Book, BookSchema } from './schema/book.schema';
-import { AuthModule } from 'src/auth/auth.module';
-import { User, UserSchema } from 'src/auth/schema/user.schema';
+import { AuthModule } from '../auth/auth.module';
+import { User, UserSchema } from '../auth/schema/user.schema';
 
 @Module({
   imports: [
