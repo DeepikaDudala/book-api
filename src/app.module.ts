@@ -7,7 +7,10 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     BookModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(process.env.DB_URL),
     AuthModule,
   ],
